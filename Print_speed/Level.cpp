@@ -60,9 +60,10 @@ void Level::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 	}
 	if (id == IDC_LEVEL_2)
 	{
-		_tcscpy_s(str, TEXT("ggggggg hhhhhh gg gg hh gg ghhhh hhhghhhhgh gggghg hhhhhhgh gh hg gggggh hhhhhg ghghgfff fff jjj hgf jjhgf fghj jjjhgf hhh gggghg hghgh jjjjfffh hjhhhhjjjj ggggfffff fggfg hgjfhjgh ghfjhg jhjhgf hgfj"));
-		SetWindowText(hText, str);
-		EndDialog(hwnd, IDC_LEVEL_2);
+			_tcscpy_s(str, TEXT("ggggggg hhhhhh gg gg hh gg ghhhh hhhghhhhgh gggghg hhhhhhgh gh hg gggggh hhhhhg ghghgfff fff jjj hgf jjhgf fghj jjjhgf hhh gggghg hghgh jjjjfffh hjhhhhjjjj ggggfffff fggfg hgjfhjgh ghfjhg jhjhgf hgfj"));
+			SetWindowText(hText, str);
+			//EndDialog(hwnd, 0);
+			EndDialog(hwnd, IDC_LEVEL_2);
 	}
 	if (id == IDC_LEVEL_3)
 	{

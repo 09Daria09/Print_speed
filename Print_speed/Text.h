@@ -30,6 +30,7 @@ public:
 	LOGFONT lf4;
 	HFONT hFont4;
 	COLORREF color;
+	static int TIMER;
 	static int index;
 	static int checkMistake;
 	HWND hButton_F, hButton_Q, hButton_W, hButton_E, hButton_R, hButton_T, hButton_Y, hButton_U, hButton_I, hButton_O,

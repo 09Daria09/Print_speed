@@ -10,6 +10,7 @@ DWORD Priority = GetPriorityClass(GetCurrentProcess());
 int Text::index = 0;
 int Text::checkMistake = 0;
 Level dlg;
+int Text::TIMER = 0;
 
 typedef map<HWND, TCHAR> MyMap;
 typedef MyMap::iterator Iter;
@@ -25,7 +26,6 @@ Text::Text(void)
 void Text::Cls_OnClose(HWND hwnd)
 {
 	EndDialog(hwnd,0);
-	dlg.Cls_OnClose(hwnd);
 	TerminateThread(Time, 0);
 }
 
@@ -41,12 +41,14 @@ DWORD WINAPI Thread(LPVOID lp)
 	HWND hProgress = (HWND)lp;
 	int min = 0;
 	int sec = 0;
+
 	TCHAR Time_[255];
 	TCHAR Min[255];
 	TCHAR Sec[255];
-	Text::ForTime = TRUE;
+	//Text::ForTime = TRUE;
 	while (Text::ForTime)
 	{
+		Text::TIMER++;
 		if (min == 5)
 		{
 			MessageBox(hProgress, TEXT("Что-то вы совсем долго \n Время вышло :("), MB_OK, MB_ICONINFORMATION);
@@ -265,14 +267,14 @@ BOOL Text::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
 	SendMessage(hButton_COMMA, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_POINT, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_SLASH, WM_SETFONT, (WPARAM)hFont2, TRUE);
-	SendMessage(hButton_SPACE, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	//SendMessage(hButton_SPACE, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_ENTER, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_SHIFTR, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hBitton_CTRLR, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_ALTR, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_IDOK, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	SendMessage(hButton_ALTL, WM_SETFONT, (WPARAM)hFont2, TRUE);
-
+	SendMessage(hEditTime, WM_SETFONT, (WPARAM)hFont2, TRUE);
 	return TRUE;
 }
 void Text::Button_change(HWND hwnd, WPARAM wParam, LPTSTR str2)
@@ -351,11 +353,72 @@ void Text::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, WPARAM wParam)
 		INT_PTR result = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG3), hwnd, Level::DlgProc);
 		if (result != NULL)
 		{
+			SendMessage(hButton_Q, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_W, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_E, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_R, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_T, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_Y, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_U, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_I, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_O, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_P, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_A, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_S, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_D, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_F, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_G, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_H, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_J, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_K, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_L, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_Z, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_X, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_C, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_V, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_B, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_N, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_M, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			SendMessage(hButton_SPACE, WM_SETFONT, (WPARAM)hFont2, TRUE);
+			TIMER = 0;
+
 			EnableWindow(hwnd, NULL);
 			SetWindowText(hEditText, dlg.str);
 			ptr->Button_change(hwnd, wParam, dlg.str);
+			SendMessage(hMistakes, PBM_SETPOS, 0, 0);
+			ForTime = TRUE;
+			if (ForTime == TRUE)
+			{
+				TerminateThread(Time, 0);
+				Time = CreateThread(NULL, 0, Thread, hEditTime, 0, NULL);
+			}
+			else
+			{
+				Time = CreateThread(NULL, 0, Thread, hEditTime, 0, NULL);
+			}
 		}
+
 		
+	}
+	if (finish == TRUE)
+	{
+		int oneMin = 60;
+		int symbol = 200;
+		finish = FALSE;
+
+		TerminateThread(Time, 0);
+		int result_time = 0;
+		result_time = (symbol * oneMin) / TIMER;
+		_stprintf_s(buffer, TEXT(" %d"), result_time);
+		TCHAR secinmin[200]= L" characters per minute";
+		_tcscat_s(buffer, secinmin);
+		MessageBox(hwnd, buffer, TEXT("Result"), MB_OK);
+	}
+	if (checkMistake == 20)
+	{
+		checkMistake = 0;
+		MessageBox(hwnd, TEXT("You have made the maximum number of mistakes :("), TEXT("Oh well next time it will work :) "), MB_OK);
+		EndDialog(hwnd, 0);
 	}
 	if (id == IDC_10)
 	{
@@ -378,18 +441,6 @@ BOOL CALLBACK Text::DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 	if (Simple == FALSE)
 	{
 		ptr->Button_change(hwnd, wParam, dlg.str);
-	}
-	if (checkMistake == 20)
-	{
-		checkMistake = 0;
-		MessageBox(hwnd, TEXT("Вы совершили максимальное количество ошибок :("), TEXT("Эх, в следующий раз все получится :) "), MB_OK);
-		EndDialog(hwnd, 0);
-		//TerminateThread(Time, 0);
-	}
-	if (finish == TRUE)
-	{
-		finish = FALSE;
-		MessageBox(hwnd, TEXT("133 слова в минуту "),TEXT("Результат"),MB_OK);
 	}
 	return FALSE;
 }
