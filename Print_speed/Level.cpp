@@ -54,8 +54,8 @@ void Level::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 				str[i] = 'f';
 			}
 		}
-		EndDialog(hwnd, IDC_LEVEL_1);
 		SetWindowText(hText, str);
+		EndDialog(hwnd, IDC_LEVEL_1);
 
 	}
 	if (id == IDC_LEVEL_2)

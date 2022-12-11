@@ -48,8 +48,12 @@ void Menu::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, UINT codeNotify)
 	if (id == IDC_START)
 	{
 		Text dlg;
-		EndDialog(hwnd, 0);
+		//EndDialog(hwnd, 0);
 		INT_PTR result = DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_DIALOG2), hwnd, Text::DlgProc);
+		if (result == IDC_10)
+		{
+			//MessageBox(0, 0, 0, 0);
+		}
 	}
 }
 

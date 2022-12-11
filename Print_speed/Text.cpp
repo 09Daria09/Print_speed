@@ -5,6 +5,7 @@
 Text* Text::ptr = NULL;
 BOOL Text::ForTime = FALSE;
 BOOL Text::Simple = FALSE;
+BOOL Text::finish = FALSE;
 DWORD Priority = GetPriorityClass(GetCurrentProcess());
 int Text::index = 0;
 int Text::checkMistake = 0;
@@ -24,6 +25,7 @@ Text::Text(void)
 void Text::Cls_OnClose(HWND hwnd)
 {
 	EndDialog(hwnd,0);
+	dlg.Cls_OnClose(hwnd);
 	TerminateThread(Time, 0);
 }
 
@@ -37,7 +39,7 @@ DWORD WINAPI Thread(LPVOID lp)
 	SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_ABOVE_NORMAL);
 
 	HWND hProgress = (HWND)lp;
-	int min = 1;
+	int min = 0;
 	int sec = 0;
 	TCHAR Time_[255];
 	TCHAR Min[255];
@@ -45,16 +47,16 @@ DWORD WINAPI Thread(LPVOID lp)
 	Text::ForTime = TRUE;
 	while (Text::ForTime)
 	{
-		/*if (sec == 0 && min == 0)
+		if (min == 5)
 		{
-			MessageBox(hProgress, TEXT("Время вышло :("), MB_OK, MB_ICONINFORMATION);
+			MessageBox(hProgress, TEXT("Что-то вы совсем долго \n Время вышло :("), MB_OK, MB_ICONINFORMATION);
 			Text::ForTime = FALSE;
 			continue;
-		}*/
-		sec--;
-		if (sec == -1) {
-			min--;
-			sec = 59;
+		}
+		sec++;
+		if (sec == 60) {
+			min++;
+			sec = 0;
 		}
 
 		if (min < 11)_stprintf_s(Time_, TEXT("0%d"), min);
@@ -90,10 +92,12 @@ BOOL Text::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
 
 	hEditPoint = GetDlgItem(hwnd, IDC_EDIT3);
 	hEditText = GetDlgItem(hwnd, IDC_EDIT2);
+	hButtonExit = GetDlgItem(hwnd, IDC_10);
 	///
 
 	hButton_F = GetDlgItem(hwnd, IDC_F);
 	hButton_Q = GetDlgItem(hwnd, IDC_Q);
+	hButton_W = GetDlgItem(hwnd, IDC_W);
 	hButton_E = GetDlgItem(hwnd, IDC_E);
 	hButton_R = GetDlgItem(hwnd, IDC_R);
 	hButton_T = GetDlgItem(hwnd, IDC_T);
@@ -118,9 +122,46 @@ BOOL Text::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
 	hButton_N = GetDlgItem(hwnd, IDC_N);
 	hButton_M = GetDlgItem(hwnd, IDC_M);
 	hButton_SPACE = GetDlgItem(hwnd, IDC_SPACE);
+	hButton_EXIT = GetDlgItem(hwnd, IDC_10);
+    hButton_TAB = GetDlgItem(hwnd, IDC_TAB);
+	hButton_CL = GetDlgItem(hwnd, IDC_CAPSLOCK);
+	hButton_SHIFTL = GetDlgItem(hwnd, IDC_SHIFTL);
+	hBitton_CTRLL = GetDlgItem(hwnd, IDC_CTRLL);
+    hButton_ALTL = GetDlgItem(hwnd, IDC_ALTL);
+	hButton_CANCEL = GetDlgItem(hwnd, IDCANCEL);
+	hButton_1 = GetDlgItem(hwnd, IDC_1);
+	hButton_2 = GetDlgItem(hwnd, IDC_2);
+	hButton_3 = GetDlgItem(hwnd, IDC_3);
+	hButton_4 = GetDlgItem(hwnd, IDC_4);
+	hButton_5 = GetDlgItem(hwnd, IDC_5);
+	hButton_6 = GetDlgItem(hwnd, IDC_6);
+	hButton_7 = GetDlgItem(hwnd, IDC_7);
+	hButton_8 = GetDlgItem(hwnd, IDC_8);
+	hButton_9 = GetDlgItem(hwnd, IDC_9);
+	hButton_0 = GetDlgItem(hwnd, IDC_NULL);
+	hButton_MINUS = GetDlgItem(hwnd, IDC_MINUS);
+	hButton_PLUS = GetDlgItem(hwnd, IDC_PLUS);
+	hButton_BACK = GetDlgItem(hwnd, IDC_BACK);
+	hButton_BRACKETL = GetDlgItem(hwnd, IDC_BRACKETL);
+	hButton_BRACKETR = GetDlgItem(hwnd, IDC_BRACKETR);
+	hButton_SLASH2 = GetDlgItem(hwnd, IDC_SLASH2);
+	hButton_SEMICOLON = GetDlgItem(hwnd, IDC_SEMICOLON);
+	hButton_APOSTROPHE = GetDlgItem(hwnd, IDC_APOSTROPHE);
+	hButton_ENTER = GetDlgItem(hwnd, IDC_ENTER);
+	hButton_COMMA = GetDlgItem(hwnd, IDC_COMMA);
+	hButton_POINT = GetDlgItem(hwnd, IDC_POINT);
+	hButton_SLASH = GetDlgItem(hwnd, IDC_SLASH);
+	hButton_SHIFTR = GetDlgItem(hwnd, IDC_SHIFTR);
+	hBitton_CTRLR = GetDlgItem(hwnd, IDC_CTRLR);
+	hButton_ALTR = GetDlgItem(hwnd, IDC_ALTR);
+	hButton_IDOK = GetDlgItem(hwnd, IDOK);
+	hButton_STATIC4 = GetDlgItem(hwnd, IDC_STATIC4);
+	hButton_STATIC1 = GetDlgItem(hwnd, IDC_STATIC1);
+	hButton_STATIC2 = GetDlgItem(hwnd, IDC_STATIC2);
 
 	m.insert(pair<HWND, TCHAR>(hButton_F, 'f'));
 	m.insert(pair<HWND, TCHAR>(hButton_Q, 'q'));
+	m.insert(pair<HWND, TCHAR>(hButton_W, 'w'));
 	m.insert(pair<HWND, TCHAR>(hButton_E, 'e'));
 	m.insert(pair<HWND, TCHAR>(hButton_R, 'r'));
 	m.insert(pair<HWND, TCHAR>(hButton_T, 't'));
@@ -148,14 +189,89 @@ BOOL Text::Cls_OnInitDialog(HWND hwnd, HWND hwndFocus, LPARAM lParam)
 
 	color = RGB(12, 34, 0);//текущий цвет текста - черный
 	memset(&lf, 0, sizeof(lf));//обнуляем структуру LOGFONT
-	lf.lfHeight = 33;
-	lf.lfWidth = 16;
+
+	lf4.lfHeight = 16;
+	lf4.lfWidth = 8;
+	hFont4 = CreateFontIndirect(&lf4);
+
+	SendMessage(hButton_STATIC4, WM_SETFONT, (WPARAM)hFont4, TRUE);
+	SendMessage(hButton_STATIC1, WM_SETFONT, (WPARAM)hFont4, TRUE);
+	SendMessage(hButton_STATIC2, WM_SETFONT, (WPARAM)hFont4, TRUE);
+
+	lf3.lfHeight = 35;
+	lf3.lfWidth = 17;
+	hFont3 = CreateFontIndirect(&lf3);//создаём новый шрифт с характеристиками по умолчанию
+	SendMessage(hEditText, WM_SETFONT, (WPARAM)hFont3, TRUE);
+
+
+	lf.lfHeight = 60;
+	lf.lfWidth = 30;
 	hFont = CreateFontIndirect(&lf);//создаём новый шрифт с характеристиками по умолчанию
-	SendMessage(hEditText, WM_SETFONT, (WPARAM)hFont, TRUE);
-	lf2.lfHeight = 0;
-	lf2.lfWidth = 0;
+
+	lf2.lfHeight = 22;
+	lf2.lfWidth = 9;
 	hFont2 = CreateFontIndirect(&lf2);
 	///
+	SendMessage(hButton_Q, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_W, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_E, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_R, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_T, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_Y, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_U, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_I, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_O, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_P, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_A, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_S, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_D, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_F, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_G, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_H, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_J, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_K, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_L, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_Z, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_X, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_C, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_V, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_B, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_N, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_M, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_EXIT, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_TAB, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_CL, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SHIFTL, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hBitton_CTRLL, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_CANCEL, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_1, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_2, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_3, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_4, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_5, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_6, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_7, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_8, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_9, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_0, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_MINUS, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_PLUS, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_BACK, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_BRACKETL, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_BRACKETR, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SLASH2, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SEMICOLON, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_APOSTROPHE, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_COMMA, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_POINT, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SLASH, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SPACE, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_ENTER, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_SHIFTR, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hBitton_CTRLR, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_ALTR, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_IDOK, WM_SETFONT, (WPARAM)hFont2, TRUE);
+	SendMessage(hButton_ALTL, WM_SETFONT, (WPARAM)hFont2, TRUE);
 
 	return TRUE;
 }
@@ -192,9 +308,12 @@ void Text::Check(HWND hwnd, WPARAM wParam, LPARAM lParam, LPTSTR str2)
 	if (str[0] == str2[index] || '@' == str[0] && str2[index]==' ')
 	{
 		str2[index] = '_';
-		SetTextColor((HDC)str2[index], RGB(205, 92, 92));
 		index++;
 		SetWindowText(hEditText, (LPCWSTR)str2);
+		if (index == 200)
+		{
+			finish = TRUE;
+		}
 	}
 	else if (str[0] == '1')
 	{
@@ -238,6 +357,10 @@ void Text::Cls_OnCommand(HWND hwnd, int id, HWND hwndCtl, WPARAM wParam)
 		}
 		
 	}
+	if (id == IDC_10)
+	{
+		EndDialog(hwnd, IDC_10);
+	}
 }
 
 BOOL CALLBACK Text::DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -262,6 +385,11 @@ BOOL CALLBACK Text::DlgProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 		MessageBox(hwnd, TEXT("Вы совершили максимальное количество ошибок :("), TEXT("Эх, в следующий раз все получится :) "), MB_OK);
 		EndDialog(hwnd, 0);
 		//TerminateThread(Time, 0);
+	}
+	if (finish == TRUE)
+	{
+		finish = FALSE;
+		MessageBox(hwnd, TEXT("133 слова в минуту "),TEXT("Результат"),MB_OK);
 	}
 	return FALSE;
 }

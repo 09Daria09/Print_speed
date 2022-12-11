@@ -9,6 +9,7 @@
 #define IDD_DIALOG3                     110
 #define IDC_EDIT1                       1004
 #define IDC_EDIT2                       1007
+#define IDC_STATIC3                     1008
 #define IDC_SPACE                       1008
 #define IDC_PROGRESS1                   1010
 #define IDC_EDIT3                       1011
@@ -30,6 +31,7 @@
 #define IDC_LEVEL_6                     1021
 #define IDC_LEVEL_7                     1022
 #define IDCANCEL2                       1023
+#define IDC_STATIC1                     1024
 #define IDC_X                           1025
 #define IDC_ALTL                        1026
 #define IDC_POINT                       1027
@@ -40,6 +42,7 @@
 #define IDC_B                           1032
 #define IDC_N                           1033
 #define IDC_M                           1034
+#define IDC_STATIC2                     1035
 #define IDC_A                           1036
 #define IDC_APOSTROPHE                  1037
 #define IDC_SEMICOLON                   1038
@@ -52,6 +55,7 @@
 #define IDC_J                           1045
 #define IDC_K                           1046
 #define IDC_ENTER                       1047
+#define IDC_STATIC4                     1048
 #define IDC_CTRLL                       1049
 #define IDC_ALTR                        1050
 #define IDC_CTRLR                       1051
@@ -84,7 +88,6 @@
 #define IDC_CAPSLOCK                    1084
 #define IDC_BACK                        1085
 #define IDC_SLASH2                      1086
-#define IDC_STATIC                      -1
 
 // Next default values for new objects
 // 
@@ -92,7 +95,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        112
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1024
+#define _APS_NEXT_CONTROL_VALUE         1049
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
